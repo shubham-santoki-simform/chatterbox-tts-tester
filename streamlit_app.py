@@ -25,6 +25,36 @@ import emotion  # noqa: E402 -- the clinical-distress-to-dial mapping shared wit
 
 PRESET_NAMES = ["Custom"] + sorted(emotion.PRESETS)
 
+KNOB_INFO = {
+    "exaggeration": {
+        "short": "How emotionally intense the voice sounds — higher is more dramatic, lower is flatter.",
+        "detail": (
+            "Exaggeration controls how strongly the emotion comes through in the voice. Low values "
+            "(left) sound calm, flat, or worn-out — good for fatigue. High values (right) sound "
+            "intense and dramatic — good for anger or severe pain. Turning this up also tends to "
+            "make the voice speak a little faster."
+        ),
+    },
+    "cfg_weight": {
+        "short": "How measured or rushed the speech sounds — higher is faster and more fluent, lower is slower and more halting.",
+        "detail": (
+            "CFG weight controls the pacing of the delivery. Low values (left) produce slow, "
+            "broken-up, halting speech — useful for pain or breathlessness. High values (right) "
+            "produce fast, confident, fluent speech — useful for anger or urgency. This is "
+            "independent from the Exaggeration dial above."
+        ),
+    },
+    "temperature": {
+        "short": "How consistent or unpredictable the delivery is — higher is more erratic, lower is more steady.",
+        "detail": (
+            "Temperature controls how much the voice's pitch and rhythm vary from line to line. Low "
+            "values (left) sound flat and very consistent. High values (right) sound more erratic "
+            "and unpredictable, which is what anxious or agitated speech sounds like. Pushing it too "
+            "high can start to sound slurred."
+        ),
+    },
+}
+
 st.set_page_config(page_title="Chatterbox TTS Tester", page_icon="🗣️")
 st.title("🗣️ Chatterbox Multilingual TTS Tester")
 
@@ -78,25 +108,31 @@ for _field, _default in emotion.NEUTRAL.items():
 
 col1, col2, col3 = st.columns(3)
 with col1:
+    st.caption(KNOB_INFO["exaggeration"]["short"])
     exaggeration = st.slider(
         "Exaggeration",
         min_value=emotion.EXAG_MIN,
         max_value=emotion.EXAG_MAX,
         key="exaggeration",
+        help=KNOB_INFO["exaggeration"]["detail"],
     )
 with col2:
+    st.caption(KNOB_INFO["cfg_weight"]["short"])
     cfg_weight = st.slider(
         "CFG weight",
         min_value=emotion.CFG_MIN,
         max_value=emotion.CFG_MAX,
         key="cfg_weight",
+        help=KNOB_INFO["cfg_weight"]["detail"],
     )
 with col3:
+    st.caption(KNOB_INFO["temperature"]["short"])
     temperature = st.slider(
         "Temperature",
         min_value=emotion.TEMP_MIN,
         max_value=emotion.TEMP_MAX,
         key="temperature",
+        help=KNOB_INFO["temperature"]["detail"],
     )
 
 if st.button("Generate speech", type="primary"):
